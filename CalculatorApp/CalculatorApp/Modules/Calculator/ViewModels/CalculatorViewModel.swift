@@ -16,6 +16,16 @@ final class CalculatorViewModel {
     private var firstOperand: Decimal?
     private var pendingOperation: CalculatorOperation?
     private var shouldResetDisplay = false
+    
+     let buttonRows: [[CalculatorButton]] = [
+        [.clear, .toggleSign, .percentage, .operation(.divide)],
+        [.digit(7), .digit(8), .digit(9), .operation(.multiply)],
+        [.digit(4), .digit(5), .digit(6), .operation(.subtract)],
+        [.digit(1), .digit(2), .digit(3), .operation(.add)],
+        [.digit(0), .decimal, .delete, .equals]
+    ]
+    
+    
 
     // MARK: - Button Tap Entry Point
 
