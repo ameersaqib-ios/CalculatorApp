@@ -14,12 +14,21 @@ struct CalculatorView: View {
         ZStack {
             Color.black.ignoresSafeArea()
 
-            VStack(spacing: 12) {
+            VStack(spacing: 0) {
+                Spacer()
+
                 DisplaySection(displayValue: viewModel.displayValue)
-                ButtonGridSection(buttonRows: viewModel.buttonRows ,buttonTapped: viewModel.buttonTapped)
+                    .padding(.bottom, 12)
+
+                ButtonGridSection(
+                    buttonRows: viewModel.buttonRows,
+                    activeOperation: viewModel.activeOperation,
+                    clearButtonTitle: viewModel.clearButtonTitle,
+                    buttonTapped: viewModel.buttonTapped
+                )
+                .padding(.horizontal, 16)
+                .padding(.bottom, 20)
             }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 20)
         }
     }
 }

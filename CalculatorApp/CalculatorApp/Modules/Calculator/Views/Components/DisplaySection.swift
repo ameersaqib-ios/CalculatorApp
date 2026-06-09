@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DisplaySection: View {
     let displayValue: String
+
     var body: some View {
         HStack {
             Spacer()
@@ -19,6 +20,6 @@ struct DisplaySection: View {
                 .minimumScaleFactor(0.4)
                 .padding(.horizontal, 16)
         }
-        .frame(maxHeight: .infinity, alignment: .bottom)
+        .padding(.bottom, 8)
     }
 }

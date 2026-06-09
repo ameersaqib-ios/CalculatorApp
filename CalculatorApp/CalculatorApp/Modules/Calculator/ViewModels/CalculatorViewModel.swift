@@ -6,43 +6,41 @@
 //
 
 import Foundation
-import SwiftUI
 
 @Observable
 final class CalculatorViewModel {
 
+    private(set) var activeOperation: CalculatorOperation? = nil
     private(set) var displayValue: String = "0"
 
     private var firstOperand: Decimal?
     private var pendingOperation: CalculatorOperation?
     private var shouldResetDisplay = false
-    
-     let buttonRows: [[CalculatorButton]] = [
+
+    let buttonRows: [[CalculatorButton]] = [
         [.clear, .toggleSign, .percentage, .operation(.divide)],
         [.digit(7), .digit(8), .digit(9), .operation(.multiply)],
         [.digit(4), .digit(5), .digit(6), .operation(.subtract)],
         [.digit(1), .digit(2), .digit(3), .operation(.add)],
         [.digit(0), .decimal, .delete, .equals]
     ]
-    
-    
 
-    // MARK: - Button Tap Entry Point
+    var clearButtonTitle: String {
+        displayValue != "0" && !shouldResetDisplay ? "C" : "AC"
+    }
 
     func buttonTapped(_ button: CalculatorButton) {
         switch button {
-        case .digit(let number):   handleDigit(number)
-        case .decimal:             handleDecimal()
-        case .operation(let op):   handleOperation(op)
-        case .equals:              handleEquals()
-        case .clear:               handleClear()
-        case .delete:              handleDelete()
-        case .toggleSign:          handleToggleSign()
-        case .percentage:          handlePercentage()
+        case .digit(let number): handleDigit(number)
+        case .decimal:           handleDecimal()
+        case .operation(let op): handleOperation(op)
+        case .equals:            handleEquals()
+        case .clear:             handleClear()
+        case .delete:            handleDelete()
+        case .toggleSign:        handleToggleSign()
+        case .percentage:        handlePercentage()
         }
     }
-
-    // MARK: - Private Handlers (each does ONE thing)
 
     private func handleDigit(_ number: Int) {
         if shouldResetDisplay {
@@ -72,6 +70,7 @@ final class CalculatorViewModel {
         }
         firstOperand = Decimal(string: displayValue)
         pendingOperation = operation
+        activeOperation = operation
         shouldResetDisplay = true
     }
 
@@ -86,14 +85,20 @@ final class CalculatorViewModel {
         displayValue = formatResult(result)
         firstOperand = nil
         pendingOperation = nil
+        activeOperation = nil
         shouldResetDisplay = true
     }
 
     private func handleClear() {
-        displayValue = "0"
-        firstOperand = nil
-        pendingOperation = nil
-        shouldResetDisplay = false
+        if displayValue != "0" && !shouldResetDisplay {
+            displayValue = "0"
+        } else {
+            displayValue = "0"
+            firstOperand = nil
+            pendingOperation = nil
+            activeOperation = nil
+            shouldResetDisplay = false
+        }
     }
 
     private func handleDelete() {
@@ -115,8 +120,6 @@ final class CalculatorViewModel {
         displayValue = formatResult(value / 100)
     }
 
-    // MARK: - Pure Math (no UI, no state — pure calculation)
-
     private func calculate(
         _ first: Decimal,
         _ operation: CalculatorOperation,
@@ -135,8 +138,10 @@ final class CalculatorViewModel {
     private func formatResult(_ value: Decimal) -> String {
         if value.isNaN { return "Error" }
         let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
         formatter.maximumFractionDigits = 10
         formatter.minimumFractionDigits = 0
+        formatter.usesGroupingSeparator = true
         return formatter.string(for: value) ?? "Error"
     }
 }

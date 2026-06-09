@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftUI
 
 enum CalculatorButton: Hashable {
     case digit(Int)
@@ -28,16 +27,6 @@ enum CalculatorButton: Hashable {
         case .delete:            return "⌫"
         case .toggleSign:        return "+/-"
         case .percentage:        return "%"
-        }
-    }
-
-    var backgroundColor: Color {
-        switch self {
-        case .operation, .equals:  return .orange
-        case .clear, .delete,
-             .toggleSign,
-             .percentage:          return Color(.systemGray4)
-        default:                   return Color(.systemGray2)
         }
     }
 }
